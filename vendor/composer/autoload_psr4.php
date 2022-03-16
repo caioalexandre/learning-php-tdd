@@ -6,9 +6,13 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'phpDocumentor\\Reflection\\' => array($vendorDir . '/phpdocumentor/reflection-common/src', $vendorDir . '/phpdocumentor/reflection-docblock/src', $vendorDir . '/phpdocumentor/type-resolver/src'),
+    'Webmozart\\Assert\\' => array($vendorDir . '/webmozart/assert/src'),
     'Symfony\\Polyfill\\Ctype\\' => array($vendorDir . '/symfony/polyfill-ctype'),
-    'Symfony\\Component\\Yaml\\' => array($vendorDir . '/symfony/yaml'),
+    'Prophecy\\' => array($vendorDir . '/phpspec/prophecy/src/Prophecy'),
+    'PhpParser\\' => array($vendorDir . '/nikic/php-parser/lib/PhpParser'),
     'Doctrine\\Instantiator\\' => array($vendorDir . '/doctrine/instantiator/src/Doctrine/Instantiator'),
-    'CDC\\Loja\\' => array($baseDir . '/src/CDC/Loja', $baseDir . '/tests/CDC/Loja'),
-    'CDC\\Exemplos\\' => array($baseDir . '/src/CDC/Exemplos', $baseDir . '/tests/CDC/Exemplos'),
+    'DeepCopy\\' => array($vendorDir . '/myclabs/deep-copy/src/DeepCopy'),
+    'CDC\\Store\\' => array($baseDir . '/src/CDC/Store', $baseDir . '/tests/CDC/Store'),
+    'CDC\\Examples\\' => array($baseDir . '/src/CDC/Examples', $baseDir . '/tests/CDC/Examples'),
 );

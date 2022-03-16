@@ -98,4 +98,22 @@ class ArgumentSpec extends ObjectBehavior
         $token = $this->containingString('string');
         $token->shouldBeAnInstanceOf('Prophecy\Argument\Token\StringContainsToken');
     }
+
+    function it_has_a_shortcut_for_approximate_token()
+    {
+        $token = $this->approximate(10);
+        $token->shouldBeAnInstanceOf('Prophecy\Argument\Token\ApproximateValueToken');
+    }
+
+    function it_has_a_shortcut_for_in_token()
+    {
+        $token = $this->in(array(1, 2, 3));
+        $token->shouldBeAnInstanceOf('Prophecy\Argument\Token\InArrayToken');
+    }
+
+    function it_has_a_shortcut_for_not_in_token()
+    {
+        $token = $this->notIn(array(1, 2, 3));
+        $token->shouldBeAnInstanceOf('Prophecy\Argument\Token\NotInArrayToken');
+    }
 }

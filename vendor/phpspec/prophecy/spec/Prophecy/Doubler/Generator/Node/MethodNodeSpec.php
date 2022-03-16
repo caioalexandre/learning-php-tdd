@@ -3,6 +3,8 @@
 namespace spec\Prophecy\Doubler\Generator\Node;
 
 use PhpSpec\ObjectBehavior;
+use Prophecy\Doubler\Generator\Node\ArgumentNode;
+use Prophecy\Doubler\Generator\Node\ReturnTypeNode;
 
 class MethodNodeSpec extends ObjectBehavior
 {
@@ -41,7 +43,7 @@ class MethodNodeSpec extends ObjectBehavior
     {
         $this->setReturnsReference();
         $this->returnsReference()->shouldReturn(true);
-    } 
+    }
 
     function it_should_be_settable_as_static_through_setter()
     {
@@ -60,14 +62,13 @@ class MethodNodeSpec extends ObjectBehavior
         $this->getVisibility()->shouldReturn('public');
     }
 
-    /**
-     * @param \Prophecy\Doubler\Generator\Node\ArgumentNode $argument1
-     * @param \Prophecy\Doubler\Generator\Node\ArgumentNode $argument2
-     */
-    function its_useParentCode_causes_method_to_call_parent($argument1, $argument2)
+    function its_useParentCode_causes_method_to_call_parent(ArgumentNode $argument1, ArgumentNode $argument2)
     {
         $argument1->getName()->willReturn('objectName');
         $argument2->getName()->willReturn('default');
+
+        $argument1->isVariadic()->willReturn(false);
+        $argument2->isVariadic()->willReturn(true);
 
         $this->addArgument($argument1);
         $this->addArgument($argument2);
@@ -75,7 +76,7 @@ class MethodNodeSpec extends ObjectBehavior
         $this->useParentCode();
 
         $this->getCode()->shouldReturn(
-            'return parent::getTitle($objectName, $default);'
+            'return parent::getTitle($objectName, ...$default);'
         );
     }
 
@@ -109,11 +110,7 @@ class MethodNodeSpec extends ObjectBehavior
         $this->getArguments()->shouldHaveCount(0);
     }
 
-    /**
-     * @param \Prophecy\Doubler\Generator\Node\ArgumentNode $argument1
-     * @param \Prophecy\Doubler\Generator\Node\ArgumentNode $argument2
-     */
-    function it_supports_adding_arguments($argument1, $argument2)
+    function it_supports_adding_arguments(ArgumentNode $argument1, ArgumentNode $argument2)
     {
         $this->addArgument($argument1);
         $this->addArgument($argument2);
@@ -121,18 +118,42 @@ class MethodNodeSpec extends ObjectBehavior
         $this->getArguments()->shouldReturn(array($argument1, $argument2));
     }
 
-    function it_does_not_have_return_type_by_default()
+    function it_has_an_empty_return_type_by_default()
     {
-        $this->hasReturnType()->shouldReturn(false);
+        $this->getReturnTypeNode()->shouldBeLike(new ReturnTypeNode());
     }
 
-    function it_setReturnType_sets_return_type()
+    function it_can_modify_return_type()
     {
-        $returnType = 'string';
+        $this->setReturnTypeNode(new ReturnTypeNode('array'));
 
-        $this->setReturnType($returnType);
+        $this->getReturnTypeNode()->shouldBeLike(new ReturnTypeNode('array'));
+    }
+
+    function it_can_modify_return_type_as_strings_using_deprecated_methods()
+    {
+        $this->setReturnType('array');
 
         $this->hasReturnType()->shouldReturn(true);
-        $this->getReturnType()->shouldReturn($returnType);
+        $this->getReturnType()->shouldReturn('array');
     }
+
+    function it_can_set_nullable_type_using_deprecated_method()
+    {
+        $this->setReturnType('int');
+
+        $this->setNullableReturnType();
+
+        $this->shouldHaveNullableReturnType();
+    }
+
+    function it_can_unset_nullable_type_using_deprecated_method()
+    {
+        $this->setReturnType('int');
+
+        $this->setNullableReturnType(false);
+
+        $this->shouldNotHaveNullableReturnType();
+    }
+
 }

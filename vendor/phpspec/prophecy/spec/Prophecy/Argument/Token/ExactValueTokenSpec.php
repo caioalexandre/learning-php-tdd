@@ -41,6 +41,14 @@ class ExactValueTokenSpec extends ObjectBehavior
         $this->scoreArgument($value2)->shouldReturn(10);
     }
 
+    function it_scores_10_if_value_is_a_double_object_and_equal_to_argument(\stdClass $value)
+    {
+        $value2 = clone $value->getWrappedObject();
+
+        $this->beConstructedWith($value);
+        $this->scoreArgument($value2)->shouldReturn(10);
+    }
+
     function it_does_not_scores_if_value_is_not_equal_to_argument()
     {
         $this->scoreArgument(50)->shouldReturn(false);
@@ -123,18 +131,17 @@ class ExactValueTokenSpec extends ObjectBehavior
         $this->__toString()->shouldReturn('exact(stream:'.$resource.')');
     }
 
-    /**
-     * @param \stdClass $object
-     */
-    function it_generates_proper_string_representation_for_object($object)
+    function it_generates_proper_string_representation_for_object(\stdClass $object)
     {
-        $objHash = sprintf('%s:%s',
+        $objHash = sprintf('exact(%s:%s',
             get_class($object->getWrappedObject()),
             spl_object_hash($object->getWrappedObject())
-        );
+        ) . " Object (\n    'objectProphecyClosure' => Closure:%s Object (\n        0 => Closure:%s Object\n    )\n))";
 
         $this->beConstructedWith($object);
-        $this->__toString()->shouldReturn("exact($objHash Object (\n    'objectProphecy' => Prophecy\Prophecy\ObjectProphecy Object (*Prophecy*)\n))");
+
+        $hashRegexExpr = '[a-f0-9]{32}';
+        $this->__toString()->shouldMatch(sprintf('/^%s$/', sprintf(preg_quote("$objHash"), $hashRegexExpr, $hashRegexExpr)));
     }
 }
 

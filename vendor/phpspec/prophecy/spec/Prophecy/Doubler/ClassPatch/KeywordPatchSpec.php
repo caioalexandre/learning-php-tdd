@@ -2,8 +2,10 @@
 
 namespace spec\Prophecy\Doubler\ClassPatch;
 
+use PhpSpec\Exception\Example\SkippingException;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
+use Prophecy\Doubler\Generator\Node\ClassNode;
 use Prophecy\Doubler\Generator\Node\MethodNode;
 
 class KeywordPatchSpec extends ObjectBehavior
@@ -18,24 +20,21 @@ class KeywordPatchSpec extends ObjectBehavior
         $this->getPriority()->shouldReturn(49);
     }
 
-    /**
-     * @param \Prophecy\Doubler\Generator\Node\ClassNode $node
-     * @param \Prophecy\Doubler\Generator\Node\MethodNode $method1
-     * @param \Prophecy\Doubler\Generator\Node\MethodNode $method2
-     * @param \Prophecy\Doubler\Generator\Node\MethodNode $method3
-     */
-    function it_will_remove_echo_and_eval_methods($node, $method1, $method2, $method3)
-    {
-        $node->removeMethod('eval')->shouldBeCalled();
-        $node->removeMethod('echo')->shouldBeCalled();
+    function it_will_remove_halt_compiler_method(
+        ClassNode $node,
+        MethodNode $method1,
+        MethodNode $method2,
+        MethodNode $method3
+    ) {
+        $node->removeMethod('__halt_compiler')->shouldBeCalled();
 
-        $method1->getName()->willReturn('echo');
-        $method2->getName()->willReturn('eval');
+        $method1->getName()->willReturn('__halt_compiler');
+        $method2->getName()->willReturn('echo');
         $method3->getName()->willReturn('notKeyword');
 
         $node->getMethods()->willReturn(array(
-            'echo' => $method1,
-            'eval' => $method2,
+            '__halt_compiler' => $method1,
+            'echo' => $method2,
             'notKeyword' => $method3,
         ));
 

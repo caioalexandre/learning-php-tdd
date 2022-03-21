@@ -26,6 +26,27 @@ class HigherAndLowerTest extends PHPUnit
             "Jogo de pratos",
             $higherLower->getLower()->getName()
         );
+
+        $this->assertEquals(
+            "Geladeira",
+            $higherLower->getHigher()->getName()
+        );
+    }
+
+    public function testJustOneProduct()
+    {
+        $cart = new ShoppingCart();
+
+        $cart->add(new Product("Geladeira", 450.00));
+
+        $higherLower = new HigherAndLower();
+        $higherLower->find($cart);
+
+        $this->assertEquals(
+            "Geladeira",
+            $higherLower->getLower()->getName()
+        );
+
         $this->assertEquals(
             "Geladeira",
             $higherLower->getHigher()->getName()

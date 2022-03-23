@@ -24,4 +24,36 @@ class RomanNumberConverterTest extends PHPUnit
 
         $this->assertEquals(5, $number);
     }
+
+    public function testMustUnderstandSymbolII()
+    {
+        $roman = new RomanNumberConverter();
+        $number = $roman->convert("II");
+
+        $this->assertEquals(2, $number);
+    }
+
+    public function testMustUnderstandSymbolXXII()
+    {
+        $roman = new RomanNumberConverter();
+        $number = $roman->convert("XXII");
+
+        $this->assertEquals(22, $number);
+    }
+
+    public function testMustUnderstandSymbolIX()
+    {
+        $roman = new RomanNumberConverter();
+        $number = $roman->convert("IX");
+
+        $this->assertEquals(9, $number);
+    }
+
+    public function testMustUnderstandSymbolXXIV()
+    {
+        $roman = new RomanNumberConverter();
+        $number = $roman->convert("XXIV");
+
+        $this->assertEquals(24, $number);
+    }
 }

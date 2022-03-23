@@ -16,10 +16,29 @@ class RomanNumberConverter
 
     public function convert($romanNumber)
     {
-        if (array_key_exists($romanNumber, $this->table)) {
-            return $this->table[$romanNumber];
+        $count = 0;
+        $lastFromRight = 0;
+
+        for ($i = strlen($romanNumber) - 1; $i >= 0; $i--) {
+
+            $current = 0;
+            $currentNumber = $romanNumber[$i];
+
+            if (array_key_exists($currentNumber, $this->table)) {
+                $current = $this->table[$currentNumber];
+            }
+
+            $multiplier = 1;
+            
+            if ($current < $lastFromRight) {
+                $multiplier = -1;
+            }
+
+            $count += ($current * $multiplier);
+
+            $lastFromRight = $current;
         }
 
-        return 0;
+        return $count;
     }
 }
